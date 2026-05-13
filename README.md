@@ -4,12 +4,12 @@ Este repositorio usa una estructura tipo monorepo, concentrando backend, fronten
 ---
 Objetivo del proyecto
 Centralizar la atención de soporte tecnológico mediante un sistema que permita:
-Levantar tickets.
+Levantar tickets de soporte.
 Consultar el estado de solicitudes.
 Gestionar usuarios, técnicos y administradores.
 Dar seguimiento a tickets.
-Controlar estados.
-Preparar la base para SLA, notificaciones, reportes y cierre de tickets.
+Controlar estados del flujo de atención.
+Preparar la base para SLA, notificaciones, reportes, cierre y reproceso de tickets.
 ---
 Stack tecnológico
 Capa	Tecnología
@@ -21,7 +21,7 @@ Servidor	Apache
 Entorno local	Linux mediante WSL
 Control de versiones	Git + GitHub
 Gestión del proyecto	GitHub Projects
-Pruebas / Calidad	TDD + validación funcional
+Calidad	TDD + validación funcional
 ---
 Estructura global del repositorio
 ```txt
@@ -55,17 +55,18 @@ MVP 5	Reportes y cierre	Incorporar dashboards, reportes, cierre, reproceso, encu
 MVP actual
 Actualmente el proyecto se encuentra en:
 MVP 1 — Base funcional
-El objetivo del MVP 1 es dejar lista la base técnica del proyecto para continuar con el desarrollo del flujo de tickets, operación TI, SLA, notificaciones y reportes.
+Objetivo del MVP 1:
+> Dejar lista la base técnica del proyecto para continuar con el desarrollo del flujo de tickets, operación TI, SLA, notificaciones y reportes.
 ---
 Issues oficiales del MVP 1
 Issue	Actividad	Estado
 MVP1-01	Configurar entorno de desarrollo en WSL	Finalizado
 MVP1-02	Validar herramientas base	Finalizado
-MVP1-03	Crear backend base en Laravel API	En proceso / validar cierre
-MVP1-04	Crear frontend base en React	En proceso / validar cierre
-MVP1-05	Configurar conexión Laravel + MySQL	Issue actual
-MVP1-06	Crear endpoint `/api/health`	Pendiente
-MVP1-07	Crear primera prueba TDD para `/api/health`	Pendiente
+MVP1-03	Crear backend base en Laravel API	Finalizado / validar cierre
+MVP1-04	Crear frontend base en React	Finalizado / validar cierre
+MVP1-05	Configurar conexión Laravel + MySQL	Finalizado / validar cierre
+MVP1-06	Crear endpoint `/api/health`	Finalizado / validar cierre
+MVP1-07	Crear primera prueba TDD para `/api/health`	Issue actual / en validación
 MVP1-08	Configurar estructura limpia inicial	Pendiente
 MVP1-09	Preparar base de autenticación futura	Pendiente
 MVP1-10	Configurar CORS para conexión React + Laravel	Pendiente
@@ -117,6 +118,46 @@ URL local esperada:
 http://127.0.0.1:8000
 ```
 ---
+Endpoint de salud
+Endpoint creado:
+```txt
+GET /api/health
+```
+URL local:
+```txt
+http://127.0.0.1:8000/api/health
+```
+Respuesta esperada:
+```json
+{
+  "status": "ok",
+  "message": "Service Desk API is running",
+  "service": "service-desk-ldr",
+  "version": "1.0.0"
+}
+```
+---
+Prueba TDD para `/api/health`
+Archivo esperado:
+```txt
+backend/service-desk-api/tests/Feature/HealthEndpointTest.php
+```
+La prueba automatizada debe validar:
+Código HTTP 200.
+Estructura JSON.
+Campo `status` con valor `ok`.
+Campo `message` con valor `Service Desk API is running`.
+Campo `service` con valor `service-desk-ldr`.
+Campo `version` con valor `1.0.0`.
+Comando para ejecutar solo esta prueba:
+```bash
+php artisan test --filter=HealthEndpointTest
+```
+Comando para ejecutar todas las pruebas:
+```bash
+php artisan test
+```
+---
 Frontend React
 Ruta del frontend:
 ```bash
@@ -149,7 +190,7 @@ Archivo plantilla que sí se sube al repositorio:
 ```txt
 backend/service-desk-api/.env.example
 ```
-Variables principales de base de datos para desarrollo local:
+Variables principales para desarrollo local:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -157,9 +198,6 @@ DB_PORT=3306
 DB_DATABASE=service_desk_ldr_dev
 DB_USERNAME=root
 DB_PASSWORD=
-```
-Variable usada para identificar el frontend local:
-```env
 FRONTEND_URL=http://localhost:5173
 ```
 ---
@@ -216,7 +254,7 @@ php artisan config:clear
 php artisan migrate
 ```
 ---
-TDD / Validación funcional
+Regla de trabajo con TDD
 El proyecto debe mantenerse bajo una filosofía de TDD o validación funcional clara.
 Flujo recomendado por issue:
 ```txt
@@ -243,13 +281,31 @@ Documentación actualizada si aplica.
 ---
 Criterios para cerrar issues MVP1-XX
 Cada issue del MVP 1 debe incluir una sección de cierre con checklist.
-Ejemplo:
+Formato esperado:
 ```txt
+## Criterios para cerrar MVP1-XX
+
 ✅ Funcionalidad implementada
 ✅ Validación ejecutada correctamente
 ✅ Sin errores críticos
 ✅ README actualizado si aplica
 ✅ Cambios subidos a GitHub
+```
+---
+Criterios para cerrar MVP1-07
+Puedes mover el issue MVP1-07 - Crear primera prueba TDD para `/api/health` a Done cuando tengas validado:
+```txt
+✅ Existe el archivo tests/Feature/HealthEndpointTest.php
+✅ La prueba usa getJson('/api/health')
+✅ La prueba valida HTTP 200
+✅ La prueba valida status: ok
+✅ La prueba valida message: Service Desk API is running
+✅ La prueba valida service: service-desk-ldr
+✅ La prueba valida version: 1.0.0
+✅ php artisan test --filter=HealthEndpointTest pasa correctamente
+✅ php artisan test no muestra errores críticos
+✅ Cambios subidos a GitHub
+✅ README global actualizado
 ```
 ---
 Tablero SCRUM
@@ -291,25 +347,24 @@ Desde la raíz del proyecto:
 ```bash
 git status
 git add .
-git commit -m "feat: describe change"
+git commit -m "test: add health endpoint test"
 git push origin main
 ```
 ---
-Estado actual esperado al cerrar MVP1-05
-Al terminar MVP1-05, se espera:
-MySQL activo.
-Base de datos `service_desk_ldr_dev` creada.
-Laravel configurado con conexión MySQL.
-`.env.example` actualizado como plantilla.
-Migraciones ejecutadas correctamente.
-Tablas base visibles en MySQL.
-`.env` protegido y no subido a GitHub.
-Cambios subidos al repositorio.
-Issue MVP1-05 actualizado en GitHub Projects.
+Estado actual esperado al cerrar MVP1-07
+Al terminar MVP1-07, se espera:
+Existe una prueba automatizada para `GET /api/health`.
+La prueba valida HTTP 200.
+La prueba valida la estructura JSON esperada.
+`php artisan test --filter=HealthEndpointTest` ejecuta correctamente.
+`php artisan test` no muestra errores críticos.
+Cambios subidos a GitHub.
+Issue MVP1-07 actualizado en GitHub Projects.
+README global actualizado.
 ---
 Próximo paso
-Después de cerrar MVP1-05, continuar con:
-MVP1-06 — Crear endpoint `/api/health`
+Después de cerrar MVP1-07, continuar con:
+MVP1-08 — Configurar estructura limpia inicial
 ---
 Responsable
 Cristian Leos  
