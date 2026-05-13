@@ -66,56 +66,47 @@ MVP1-03	Crear backend base en Laravel API	Finalizado / validar cierre
 MVP1-04	Crear frontend base en React	Finalizado / validar cierre
 MVP1-05	Configurar conexión Laravel + MySQL	Finalizado / validar cierre
 MVP1-06	Crear endpoint `/api/health`	Finalizado / validar cierre
-MVP1-07	Crear primera prueba TDD para `/api/health`	Issue actual / en validación
-MVP1-08	Configurar estructura limpia inicial	Pendiente
-MVP1-09	Preparar base de autenticación futura	Pendiente
-MVP1-10	Configurar CORS para conexión React + Laravel	Pendiente
+MVP1-07	Crear primera prueba TDD para `/api/health`	Finalizado / validar cierre
+MVP1-08	Configurar estructura limpia inicial	Finalizado / validar cierre
+MVP1-09	Preparar base de autenticación futura	Finalizado / validar cierre
+MVP1-10	Configurar CORS para conexión React + Laravel	Issue actual
 MVP1-11	Crear primera llamada desde React a Laravel	Pendiente
 MVP1-12	Crear README inicial del proyecto	En actualización continua
 MVP1-13	Subir avance a GitHub	Pendiente / continuo
 MVP1-14	Validar criterios de cierre del MVP 1	Pendiente
----
-Requisitos base del entorno
-Validar las herramientas principales:
-```bash
-php -v
-composer -V
-mysql --version
-apache2 -v
-node -v
-npm -v
-git --version
-curl --version
-```
 ---
 Backend Laravel API
 Ruta del backend:
 ```bash
 backend/service-desk-api
 ```
-Entrar al backend:
+Comandos principales:
 ```bash
 cd backend/service-desk-api
-```
-Instalar dependencias, si aplica:
-```bash
-composer install
-```
-Validar Laravel:
-```bash
 php artisan --version
-```
-Listar rutas:
-```bash
 php artisan route:list
-```
-Levantar servidor local:
-```bash
+php artisan test
 php artisan serve
 ```
 URL local esperada:
 ```txt
 http://127.0.0.1:8000
+```
+---
+Frontend React
+Ruta del frontend:
+```bash
+frontend/service-desk-web
+```
+Comandos principales:
+```bash
+cd frontend/service-desk-web
+npm install
+npm run dev
+```
+URL local esperada:
+```txt
+http://localhost:5173
 ```
 ---
 Endpoint de salud
@@ -136,48 +127,9 @@ Respuesta esperada:
   "version": "1.0.0"
 }
 ```
----
-Prueba TDD para `/api/health`
-Archivo esperado:
-```txt
-backend/service-desk-api/tests/Feature/HealthEndpointTest.php
-```
-La prueba automatizada debe validar:
-Código HTTP 200.
-Estructura JSON.
-Campo `status` con valor `ok`.
-Campo `message` con valor `Service Desk API is running`.
-Campo `service` con valor `service-desk-ldr`.
-Campo `version` con valor `1.0.0`.
-Comando para ejecutar solo esta prueba:
+Prueba TDD relacionada:
 ```bash
 php artisan test --filter=HealthEndpointTest
-```
-Comando para ejecutar todas las pruebas:
-```bash
-php artisan test
-```
----
-Frontend React
-Ruta del frontend:
-```bash
-frontend/service-desk-web
-```
-Entrar al frontend:
-```bash
-cd frontend/service-desk-web
-```
-Instalar dependencias:
-```bash
-npm install
-```
-Levantar React:
-```bash
-npm run dev
-```
-URL local esperada:
-```txt
-http://localhost:5173
 ```
 ---
 Variables de entorno
@@ -186,11 +138,11 @@ Archivo real local:
 ```txt
 backend/service-desk-api/.env
 ```
-Archivo plantilla que sí se sube al repositorio:
+Archivo plantilla:
 ```txt
 backend/service-desk-api/.env.example
 ```
-Variables principales para desarrollo local:
+Variables principales:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -200,17 +152,16 @@ DB_USERNAME=root
 DB_PASSWORD=
 FRONTEND_URL=http://localhost:5173
 ```
----
 Frontend React
 Archivo real local:
 ```txt
 frontend/service-desk-web/.env
 ```
-Archivo plantilla que sí se sube al repositorio:
+Archivo plantilla:
 ```txt
 frontend/service-desk-web/.env.example
 ```
-Variable base para consumir la API Laravel:
+Variable principal:
 ```env
 VITE_API_URL=http://127.0.0.1:8000/api
 ```
@@ -235,23 +186,27 @@ const api = axios.create({
 export default api;
 ```
 ---
-Base de datos
-Base de datos sugerida para desarrollo:
-```txt
-service_desk_ldr_dev
+CORS React + Laravel
+Issue actual:
+MVP1-10 — Configurar CORS para conexión React + Laravel
+Objetivo:
+> Permitir que el frontend React en `http://localhost:5173` pueda consumir la API Laravel en `http://127.0.0.1:8000/api` sin bloqueo del navegador por política CORS.
+Configuración esperada para desarrollo local:
+```php
+'paths' => ['api/*', 'sanctum/csrf-cookie'],
+'allowed_methods' => ['*'],
+'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:5173')],
+'allowed_headers' => ['*'],
+'exposed_headers' => [],
+'max_age' => 0,
+'supports_credentials' => false,
 ```
-Base de datos sugerida para pruebas:
-```txt
-service_desk_ldr_test
-```
-Comando SQL sugerido para crear la base de datos de desarrollo:
-```sql
-CREATE DATABASE service_desk_ldr_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-Después de configurar el archivo `.env` de Laravel, validar conexión con:
+Validaciones esperadas:
 ```bash
 php artisan config:clear
-php artisan migrate
+php artisan route:list
+php artisan test
+curl -i -H "Origin: http://localhost:5173" http://127.0.0.1:8000/api/health
 ```
 ---
 Regla de trabajo con TDD
@@ -279,37 +234,25 @@ Sin errores visibles.
 Commit subido a GitHub.
 Documentación actualizada si aplica.
 ---
-Criterios para cerrar issues MVP1-XX
-Cada issue del MVP 1 debe incluir una sección de cierre con checklist.
-Formato esperado:
+Criterios para cerrar MVP1-10
+Puedes mover el issue MVP1-10 - Configurar CORS para conexión React + Laravel a Done cuando tengas validado:
 ```txt
-## Criterios para cerrar MVP1-XX
-
-✅ Funcionalidad implementada
-✅ Validación ejecutada correctamente
-✅ Sin errores críticos
-✅ README actualizado si aplica
-✅ Cambios subidos a GitHub
-```
----
-Criterios para cerrar MVP1-07
-Puedes mover el issue MVP1-07 - Crear primera prueba TDD para `/api/health` a Done cuando tengas validado:
-```txt
-✅ Existe el archivo tests/Feature/HealthEndpointTest.php
-✅ La prueba usa getJson('/api/health')
-✅ La prueba valida HTTP 200
-✅ La prueba valida status: ok
-✅ La prueba valida message: Service Desk API is running
-✅ La prueba valida service: service-desk-ldr
-✅ La prueba valida version: 1.0.0
-✅ php artisan test --filter=HealthEndpointTest pasa correctamente
-✅ php artisan test no muestra errores críticos
-✅ Cambios subidos a GitHub
+✅ Existe configuración CORS en Laravel
+✅ FRONTEND_URL=http://localhost:5173 está definido en .env
+✅ FRONTEND_URL está documentado en .env.example
+✅ allowed_origins permite http://localhost:5173
+✅ paths incluye api/*
+✅ php artisan config:clear se ejecutó correctamente
+✅ php artisan route:list funciona correctamente
+✅ php artisan test sigue pasando sin errores críticos
+✅ curl con Origin http://localhost:5173 responde correctamente
+✅ No aparece error CORS al consumir Laravel desde React
 ✅ README global actualizado
+✅ Cambios subidos a GitHub
 ```
 ---
 Tablero SCRUM
-Columnas del tablero:
+Columnas:
 ```txt
 Product Backlog
 Sprint Backlog
@@ -320,7 +263,7 @@ Testing / QA
 Blocked
 Done
 ```
-Campos usados:
+Campos:
 ```txt
 Priority
 Module
@@ -329,7 +272,7 @@ Story Points
 Type
 MVP Phase
 ```
-Escala oficial de Story Points:
+Story Points:
 ```txt
 1 = Muy fácil
 2 = Fácil
@@ -337,34 +280,29 @@ Escala oficial de Story Points:
 5 = Complejo
 8 = Muy complejo
 ```
-Regla:
-```txt
-Si una tarea parece de 8 puntos o más, conviene dividirla en issues más pequeños.
-```
 ---
 Comandos Git básicos
 Desde la raíz del proyecto:
 ```bash
 git status
 git add .
-git commit -m "test: add health endpoint test"
+git commit -m "chore: configure CORS for React frontend"
 git push origin main
 ```
 ---
-Estado actual esperado al cerrar MVP1-07
-Al terminar MVP1-07, se espera:
-Existe una prueba automatizada para `GET /api/health`.
-La prueba valida HTTP 200.
-La prueba valida la estructura JSON esperada.
-`php artisan test --filter=HealthEndpointTest` ejecuta correctamente.
-`php artisan test` no muestra errores críticos.
-Cambios subidos a GitHub.
-Issue MVP1-07 actualizado en GitHub Projects.
+Estado esperado al cerrar MVP1-10
+Al terminar MVP1-10, se espera:
+Laravel permite peticiones desde React local.
+La API mantiene la ruta `/api/health` funcionando.
+Las pruebas actuales siguen pasando.
+No hay errores críticos de CORS.
 README global actualizado.
+Cambios subidos a GitHub.
+Issue MVP1-10 actualizado en GitHub Projects.
 ---
 Próximo paso
-Después de cerrar MVP1-07, continuar con:
-MVP1-08 — Configurar estructura limpia inicial
+Después de cerrar MVP1-10, continuar con:
+MVP1-11 — Crear primera llamada desde React a Laravel
 ---
 Responsable
 Cristian Leos  
