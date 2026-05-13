@@ -55,22 +55,24 @@ MVP 5	Reportes y cierre	Incorporar dashboards, reportes, cierre, reproceso, encu
 MVP actual
 Actualmente el proyecto se encuentra en:
 MVP 1 — Base funcional
-Issues oficiales actuales:
-Issue	Actividad
-MVP1-01	Configurar entorno de desarrollo en WSL
-MVP1-02	Validar herramientas base
-MVP1-03	Crear backend base en Laravel API
-MVP1-04	Crear frontend base en React
-MVP1-05	Configurar conexión Laravel + MySQL
-MVP1-06	Crear endpoint `/api/health`
-MVP1-07	Crear primera prueba TDD para `/api/health`
-MVP1-08	Configurar estructura limpia inicial
-MVP1-09	Preparar base de autenticación futura
-MVP1-10	Configurar CORS para conexión React + Laravel
-MVP1-11	Crear primera llamada desde React a Laravel
-MVP1-12	Crear README inicial del proyecto
-MVP1-13	Subir avance a GitHub
-MVP1-14	Validar criterios de cierre del MVP 1
+El objetivo del MVP 1 es dejar lista la base técnica del proyecto para continuar con el desarrollo del flujo de tickets, operación TI, SLA, notificaciones y reportes.
+---
+Issues oficiales del MVP 1
+Issue	Actividad	Estado
+MVP1-01	Configurar entorno de desarrollo en WSL	Finalizado
+MVP1-02	Validar herramientas base	Finalizado
+MVP1-03	Crear backend base en Laravel API	En proceso / validar cierre
+MVP1-04	Crear frontend base en React	En proceso / validar cierre
+MVP1-05	Configurar conexión Laravel + MySQL	Issue actual
+MVP1-06	Crear endpoint `/api/health`	Pendiente
+MVP1-07	Crear primera prueba TDD para `/api/health`	Pendiente
+MVP1-08	Configurar estructura limpia inicial	Pendiente
+MVP1-09	Preparar base de autenticación futura	Pendiente
+MVP1-10	Configurar CORS para conexión React + Laravel	Pendiente
+MVP1-11	Crear primera llamada desde React a Laravel	Pendiente
+MVP1-12	Crear README inicial del proyecto	En actualización continua
+MVP1-13	Subir avance a GitHub	Pendiente / continuo
+MVP1-14	Validar criterios de cierre del MVP 1	Pendiente
 ---
 Requisitos base del entorno
 Validar las herramientas principales:
@@ -147,10 +149,20 @@ Archivo plantilla que sí se sube al repositorio:
 ```txt
 backend/service-desk-api/.env.example
 ```
+Variables principales de base de datos para desarrollo local:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=service_desk_ldr_dev
+DB_USERNAME=root
+DB_PASSWORD=
+```
 Variable usada para identificar el frontend local:
 ```env
 FRONTEND_URL=http://localhost:5173
 ```
+---
 Frontend React
 Archivo real local:
 ```txt
@@ -194,8 +206,17 @@ Base de datos sugerida para pruebas:
 ```txt
 service_desk_ldr_test
 ```
+Comando SQL sugerido para crear la base de datos de desarrollo:
+```sql
+CREATE DATABASE service_desk_ldr_dev CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+Después de configurar el archivo `.env` de Laravel, validar conexión con:
+```bash
+php artisan config:clear
+php artisan migrate
+```
 ---
-Regla de trabajo con TDD
+TDD / Validación funcional
 El proyecto debe mantenerse bajo una filosofía de TDD o validación funcional clara.
 Flujo recomendado por issue:
 ```txt
@@ -219,6 +240,17 @@ Prueba automatizada o validación funcional clara.
 Sin errores visibles.
 Commit subido a GitHub.
 Documentación actualizada si aplica.
+---
+Criterios para cerrar issues MVP1-XX
+Cada issue del MVP 1 debe incluir una sección de cierre con checklist.
+Ejemplo:
+```txt
+✅ Funcionalidad implementada
+✅ Validación ejecutada correctamente
+✅ Sin errores críticos
+✅ README actualizado si aplica
+✅ Cambios subidos a GitHub
+```
 ---
 Tablero SCRUM
 Columnas del tablero:
@@ -263,17 +295,21 @@ git commit -m "feat: describe change"
 git push origin main
 ```
 ---
-Estado actual esperado
-Al terminar MVP1-04, se espera:
-Backend creado en `backend/service-desk-api`.
-Frontend creado en `frontend/service-desk-web`.
-Laravel validado con `php artisan serve`.
-React validado con `npm run dev`.
-Axios instalado y configurado.
-`.env.example` creado en React.
-`.gitignore` configurado en la raíz.
-README global creado.
-Avance subido a GitHub.
+Estado actual esperado al cerrar MVP1-05
+Al terminar MVP1-05, se espera:
+MySQL activo.
+Base de datos `service_desk_ldr_dev` creada.
+Laravel configurado con conexión MySQL.
+`.env.example` actualizado como plantilla.
+Migraciones ejecutadas correctamente.
+Tablas base visibles en MySQL.
+`.env` protegido y no subido a GitHub.
+Cambios subidos al repositorio.
+Issue MVP1-05 actualizado en GitHub Projects.
+---
+Próximo paso
+Después de cerrar MVP1-05, continuar con:
+MVP1-06 — Crear endpoint `/api/health`
 ---
 Responsable
 Cristian Leos  
