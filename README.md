@@ -397,27 +397,6 @@ Story Points:
 
 ---
 
-## Comandos Git básicos
-
-Desde la raíz del proyecto:
-
-```bash
-git status
-git add .
-git commit -m "docs: add project README files"
-git push origin main
-```
-
----
-
-## Próximo paso
-
-Después de cerrar MVP1-12, continuar con:
-
-**MVP1-13 — Subir avance a GitHub**
-
----
-
 ## Responsable
 
 Cristian Leos  
