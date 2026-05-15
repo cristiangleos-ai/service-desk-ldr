@@ -1,12 +1,10 @@
-# Service Desk LDR — README Global MVP2-05
+# Service Desk LDR — README Global MVP2-06
 
 Sistema interno tipo **Service Desk / Helpdesk** para la gestión de incidentes, requerimientos y solicitudes de soporte tecnológico dentro de LDR Solutions.
 
----
-
 ## Arquitectura oficial
 
-El proyecto trabaja con arquitectura **monorepo full stack**:
+Arquitectura **monorepo full stack**:
 
 ```txt
 service-desk-ldr/
@@ -36,28 +34,6 @@ MySQL
 
 Frontend React organizado por páginas, componentes y servicios, consumiendo la API mediante Axios.
 
----
-
-## MVP cerrado
-
-**MVP 1 — Base funcional** quedó cerrado.
-
-Incluye:
-
-```txt
-✅ Laravel API
-✅ React
-✅ MySQL
-✅ Endpoint GET /api/health
-✅ Prueba TDD de /api/health
-✅ CORS
-✅ Primera conexión React + Laravel
-✅ READMEs
-✅ GitHub + tablero
-```
-
----
-
 ## MVP actual
 
 **MVP 2 — Gestión de tickets**
@@ -66,25 +42,7 @@ Objetivo:
 
 > Permitir que un usuario pueda crear un ticket desde React, clasificarlo por área/categoría/subcategoría, guardar la información en MySQL mediante Laravel API y consultar sus tickets creados.
 
----
-
-## Requerimiento futuro agregado
-
-Se agrega como requerimiento futuro una **Base de conocimiento / BD de aprendizaje** para registrar soluciones técnicas aplicadas por técnicos al resolver tickets.
-
-Objetivo:
-
-> Reutilizar conocimiento cuando se repita un problema similar, evitando capturas duplicadas por tipo de aprendizaje o solución.
-
-Ubicación principal:
-
-```txt
-MVP 3 — Operación TI
-```
-
----
-
-## Issues MVP 2
+## Avance MVP 2
 
 | Issue | Actividad | Estado |
 |---|---|---|
@@ -92,8 +50,8 @@ MVP 3 — Operación TI
 | MVP2-02 | Crear migración y modelo Area | Finalizado / validar cierre |
 | MVP2-03 | Crear migración y modelo Category | Finalizado / validar cierre |
 | MVP2-04 | Crear migración y modelo Subcategory | Finalizado / validar cierre |
-| MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Issue actual |
-| MVP2-06 | Crear migración y modelo Ticket | Pendiente |
+| MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Finalizado / validar cierre |
+| MVP2-06 | Crear migración y modelo Ticket | Issue actual |
 | MVP2-07 | Crear prueba TDD para creación de ticket | Pendiente |
 | MVP2-08 | Crear endpoint para registrar ticket | Pendiente |
 | MVP2-09 | Crear validaciones backend para ticket | Pendiente |
@@ -111,128 +69,152 @@ MVP 3 — Operación TI
 | MVP2-21 | Actualizar README global, backend y frontend | Pendiente |
 | MVP2-22 | Validar criterios de cierre del MVP 2 | Pendiente |
 
----
-
-## MVP2-05 — Crear seeders de áreas, categorías y subcategorías
+## MVP2-06 — Crear migración y modelo Ticket
 
 Objetivo:
 
-> Cargar el catálogo base de áreas, categorías y subcategorías en MySQL para que el usuario pueda clasificar correctamente su ticket desde React.
+> Crear la entidad principal `Ticket`, que será el núcleo del Service Desk y permitirá guardar las solicitudes creadas por los usuarios.
 
----
-
-## Catálogo base
-
-### Áreas iniciales
+## Modelo esperado
 
 ```txt
-Tecnologías de la Información
-Servicios Generales
-Recursos Humanos
-Jurídico
+app/Models/Ticket.php
 ```
 
-### Categorías TI
+## Migración esperada
 
 ```txt
-Programas / Software
-Equipo de cómputo
-Internet
-Intranet / Plataformas de la empresa
+database/migrations/xxxx_xx_xx_xxxxxx_create_tickets_table.php
 ```
 
-### Subcategorías TI
+## Tabla esperada
 
 ```txt
-Programas / Software:
-- Office 365 (Word, Excel, PowerPoint)
-- Correo
-- Instalación de programas
-- Soporte de aplicaciones
-
-Equipo de cómputo:
-- Laptop
-- PC de escritorio
-- Impresora
-- Celular
-- Periféricos (otros dispositivos)
-
-Internet:
-- Red WiFi
-- Desbloqueo de sitio web
-- Red cableada
-
-Intranet / Plataformas de la empresa:
-- Comunicados institucionales
-- Demos
-- Flotilla
-- Inventario de Unidades
-- Posventa
-- Training Center
-- Tracking Released Units
-- Viáticos
+tickets
 ```
 
----
-
-## Archivos esperados
+## Campos sugeridos
 
 ```txt
-database/seeders/ServiceDeskCatalogSeeder.php
-database/seeders/DatabaseSeeder.php
-tests/Feature/ServiceDeskCatalogSeederTest.php
+id
+folio
+requester_id
+assigned_to_id
+area_id
+category_id
+subcategory_id
+title
+description
+priority
+status
+created_at
+updated_at
+deleted_at
 ```
 
----
+## Relaciones esperadas
+
+```txt
+Ticket belongsTo Area
+Ticket belongsTo Category
+Ticket belongsTo Subcategory
+Ticket belongsTo User como requester
+Ticket belongsTo User como assignedTo
+```
+
+## Estados base iniciales
+
+```txt
+new
+assigned
+in_progress
+resolved
+closed
+cancelled
+reprocess
+```
+
+## Prioridades base iniciales
+
+```txt
+urgent
+high
+medium
+low
+```
+
+## Requerimiento futuro agregado
+
+Se mantiene como requerimiento futuro una **Base de conocimiento / BD de aprendizaje** para registrar soluciones técnicas aplicadas por técnicos al resolver tickets.
+
+Ubicación principal:
+
+```txt
+MVP 3 — Operación TI
+```
 
 ## Validaciones esperadas
 
 ```bash
-php artisan db:seed --class=ServiceDeskCatalogSeeder
-php artisan test --filter=ServiceDeskCatalogSeederTest
+php artisan make:model Ticket -m
+php artisan migrate
 php artisan test
 ```
 
----
-
-## Criterios para cerrar MVP2-05
-
-Puedes mover el issue **MVP2-05 - Crear seeders de áreas, categorías y subcategorías** a **Done** cuando tengas validado:
+## Regla de trabajo con TDD / validación funcional
 
 ```txt
-✅ Se creó ServiceDeskCatalogSeeder
-✅ Se registraron las áreas base
-✅ Se registraron las categorías TI
-✅ Se registraron las subcategorías TI
-✅ El seeder usa firstOrCreate o updateOrCreate para evitar duplicados
-✅ El seeder puede ejecutarse más de una vez sin duplicar registros
-✅ DatabaseSeeder llama a ServiceDeskCatalogSeeder
-✅ Se creó prueba para validar el catálogo base
-✅ php artisan db:seed --class=ServiceDeskCatalogSeeder se ejecuta correctamente
-✅ php artisan test --filter=ServiceDeskCatalogSeederTest pasa correctamente
+Criterio de aceptación o prueba
+↓
+Implementación mínima
+↓
+Validación
+↓
+Refactorización
+↓
+Documentación
+↓
+Subir cambios a GitHub
+↓
+Done
+```
+
+## Criterios para cerrar MVP2-06
+
+Crear migración y modelo Ticket:
+
+```txt
+✅ Se creó el modelo app/Models/Ticket.php
+✅ Se creó la migración create_tickets_table
+✅ La tabla tickets incluye id
+✅ La tabla tickets incluye folio único
+✅ La tabla tickets incluye requester_id nullable
+✅ La tabla tickets incluye assigned_to_id nullable
+✅ La tabla tickets incluye area_id
+✅ La tabla tickets incluye category_id
+✅ La tabla tickets incluye subcategory_id
+✅ La tabla tickets incluye title
+✅ La tabla tickets incluye description
+✅ La tabla tickets incluye priority con valor default medium
+✅ La tabla tickets incluye status con valor default new
+✅ La tabla tickets incluye timestamps
+✅ La tabla tickets incluye softDeletes
+✅ Se agregaron índices útiles para consultas
+✅ El modelo Ticket tiene fillable configurado
+✅ El modelo Ticket tiene relación area()
+✅ El modelo Ticket tiene relación category()
+✅ El modelo Ticket tiene relación subcategory()
+✅ El modelo Ticket tiene relación requester()
+✅ El modelo Ticket tiene relación assignedTo()
+✅ php artisan migrate se ejecuta correctamente
 ✅ php artisan test sigue pasando sin errores críticos
 ✅ README global actualizado
 ✅ Cambios subidos a GitHub
 ```
 
----
-
-## Commit recomendado
-
-```bash
-git status
-git add .
-git commit -m "feat: seed service desk base catalogs"
-git push origin main
-```
-
----
-
 ## Próximo paso
 
-**MVP2-06 — Crear migración y modelo Ticket**
-
----
+**MVP2-07 — Crear prueba TDD para creación de ticket**
 
 ## Responsable
 
