@@ -8,14 +8,7 @@ Este repositorio usa una estructura tipo **monorepo**, concentrando backend, fro
 
 ## Objetivo del proyecto
 
-Centralizar la atención de soporte tecnológico mediante un sistema que permita:
-
-- Levantar tickets de soporte.
-- Consultar el estado de solicitudes.
-- Gestionar usuarios, técnicos y administradores.
-- Dar seguimiento a tickets.
-- Controlar estados del flujo de atención.
-- Preparar la base para SLA, notificaciones, reportes, cierre y reproceso de tickets.
+Centralizar la atención de soporte tecnológico mediante un sistema que permita levantar tickets, consultar solicitudes, gestionar usuarios/técnicos/administradores, dar seguimiento a tickets y preparar la base para SLA, notificaciones, reportes, cierre, reproceso y base de conocimiento futura.
 
 ---
 
@@ -35,281 +28,203 @@ Centralizar la atención de soporte tecnológico mediante un sistema que permita
 
 ---
 
-## Estructura global del repositorio
+## Arquitectura oficial
+
+El proyecto trabaja con una arquitectura **monorepo full stack**, separando backend Laravel API y frontend React.
+
+El backend está organizado con una arquitectura por capas ligera:
 
 ```txt
-service-desk-ldr/
-│
-├── backend/
-│   └── service-desk-api/
-│       ├── app/
-│       ├── bootstrap/
-│       ├── config/
-│       ├── database/
-│       ├── public/
-│       ├── resources/
-│       ├── routes/
-│       ├── storage/
-│       ├── tests/
-│       ├── .env.example
-│       ├── artisan
-│       ├── composer.json
-│       └── README.md
-│
-├── frontend/
-│   └── service-desk-web/
-│       ├── public/
-│       ├── src/
-│       ├── .env.example
-│       ├── index.html
-│       ├── package.json
-│       ├── vite.config.js
-│       └── README.md
-│
-├── docs/
-│   ├── requerimientos/
-│   ├── evidencias/
-│   ├── arquitectura/
-│   └── pruebas/
-│
-├── README.md
-└── .gitignore
+Routes
+↓
+Controllers
+↓
+Requests
+↓
+Services
+↓
+Repositories
+↓
+Models
+↓
+MySQL
 ```
+
+El frontend se organiza por páginas, componentes y servicios, consumiendo la API mediante Axios.
 
 ---
 
-## Plan general por MVP
+## MVP cerrado
 
-| MVP | Nombre | Objetivo |
-|---|---|---|
-| MVP 0 | Setup | Preparar entorno, repositorio, tablero y estructura inicial. |
-| MVP 1 | Base funcional | Crear la base Laravel API + React + MySQL + comunicación inicial. |
-| MVP 2 | Gestión de tickets | Construir el flujo formal de tickets, estados, historial y comentarios. |
-| MVP 3 | Operación TI | Permitir que técnicos/admin asignen, atiendan y resuelvan tickets. |
-| MVP 4 | SLA y notificaciones | Agregar prioridades, tiempos de atención, semáforos y alertas. |
-| MVP 5 | Reportes y cierre | Incorporar dashboards, reportes, cierre, reproceso, encuesta y despliegue. |
+**MVP 1 — Base funcional** queda cerrado como primera base técnica del proyecto.
+
+Incluye backend Laravel API, frontend React, MySQL configurado, endpoint `GET /api/health`, prueba TDD, CORS, primera conexión React + Laravel, READMEs y avance en GitHub.
 
 ---
 
 ## MVP actual
 
-Actualmente el proyecto se encuentra en:
+Actualmente se trabaja en:
 
-**MVP 1 — Base funcional**
+**MVP 2 — Gestión de tickets**
 
-Objetivo del MVP 1:
+Objetivo del MVP 2:
 
-> Dejar lista la base técnica del proyecto para continuar con el desarrollo del flujo de tickets, operación TI, SLA, notificaciones y reportes.
+> Permitir que un usuario pueda crear un ticket desde React, clasificarlo por área/categoría/subcategoría, guardar la información en MySQL mediante Laravel API y consultar sus tickets creados.
 
 ---
 
-## Issues oficiales del MVP 1
+## Alcance del MVP 2
+
+### Incluye
+
+```txt
+✅ Definir alcance técnico del MVP 2
+✅ Crear modelos y migraciones para Area, Category, Subcategory y Ticket
+✅ Crear seeders de áreas, categorías y subcategorías
+✅ Crear prueba TDD para creación de ticket
+✅ Crear endpoint para registrar ticket
+✅ Crear validaciones backend
+✅ Generar folio automático
+✅ Guardar estado inicial del ticket
+✅ Crear endpoints para listar catálogos
+✅ Crear formulario React para levantar ticket
+✅ Conectar formulario React con Laravel API
+✅ Agregar resumen previo y confirmación
+✅ Implementar adjunto opcional máximo 5MB
+✅ Crear vista Mis tickets
+✅ Crear vista detalle básico
+✅ Crear historial básico de ticket
+✅ Probar flujo completo
+✅ Actualizar documentación
+✅ Validar cierre del MVP 2
+```
+
+### No incluye todavía
+
+```txt
+❌ Dashboard técnico avanzado
+❌ Dashboard administrador avanzado
+❌ SLA completo
+❌ Notificaciones automáticas
+❌ Reasignación completa
+❌ Cierre automático
+❌ Encuesta de satisfacción
+❌ Reportes Excel/PDF
+❌ Base de conocimiento completa
+```
+
+---
+
+## Requerimiento futuro agregado
+
+Se agrega como requerimiento futuro una **Base de conocimiento / BD de aprendizaje** para registrar soluciones técnicas aplicadas por los técnicos al resolver tickets.
+
+Objetivo:
+
+> Reutilizar conocimiento cuando se repita un problema similar, evitando capturas duplicadas por tipo de aprendizaje o solución.
+
+Ubicación principal:
+
+```txt
+MVP 3 — Operación TI
+```
+
+---
+
+## Issues planeados del MVP 2
 
 | Issue | Actividad | Estado |
 |---|---|---|
-| MVP1-01 | Configurar entorno de desarrollo en WSL | Finalizado |
-| MVP1-02 | Validar herramientas base | Finalizado |
-| MVP1-03 | Crear backend base en Laravel API | Finalizado / validar cierre |
-| MVP1-04 | Crear frontend base en React | Finalizado / validar cierre |
-| MVP1-05 | Configurar conexión Laravel + MySQL | Finalizado / validar cierre |
-| MVP1-06 | Crear endpoint `/api/health` | Finalizado / validar cierre |
-| MVP1-07 | Crear primera prueba TDD para `/api/health` | Finalizado / validar cierre |
-| MVP1-08 | Configurar estructura limpia inicial | Finalizado / validar cierre |
-| MVP1-09 | Preparar base de autenticación futura | Finalizado / validar cierre |
-| MVP1-10 | Configurar CORS para conexión React + Laravel | Finalizado / validar cierre |
-| MVP1-11 | Crear primera llamada desde React a Laravel | Finalizado / validar cierre |
-| MVP1-12 | Crear README inicial del proyecto | Issue actual |
-| MVP1-13 | Subir avance a GitHub | Pendiente / continuo |
-| MVP1-14 | Validar criterios de cierre del MVP 1 | Pendiente |
+| MVP2-01 | Definir alcance técnico del MVP 2 | Finalizado / validar cierre |
+| MVP2-02 | Crear migración y modelo Area | Finalizado / validar cierre |
+| MVP2-03 | Crear migración y modelo Category | Issue actual |
+| MVP2-04 | Crear migración y modelo Subcategory | Pendiente |
+| MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Pendiente |
+| MVP2-06 | Crear migración y modelo Ticket | Pendiente |
+| MVP2-07 | Crear prueba TDD para creación de ticket | Pendiente |
+| MVP2-08 | Crear endpoint para registrar ticket | Pendiente |
+| MVP2-09 | Crear validaciones backend para ticket | Pendiente |
+| MVP2-10 | Implementar generación automática de folio | Pendiente |
+| MVP2-11 | Implementar estado inicial del ticket | Pendiente |
+| MVP2-12 | Crear endpoint para listar catálogos | Pendiente |
+| MVP2-13 | Crear formulario React para levantar ticket | Pendiente |
+| MVP2-14 | Conectar formulario React con Laravel API | Pendiente |
+| MVP2-15 | Agregar resumen previo y confirmación | Pendiente |
+| MVP2-16 | Implementar adjunto opcional máximo 5MB | Pendiente |
+| MVP2-17 | Crear vista “Mis tickets” | Pendiente |
+| MVP2-18 | Crear vista detalle básico de ticket | Pendiente |
+| MVP2-19 | Crear historial básico de ticket | Pendiente |
+| MVP2-20 | Probar flujo completo de creación de ticket | Pendiente |
+| MVP2-21 | Actualizar README global, backend y frontend | Pendiente |
+| MVP2-22 | Validar criterios de cierre del MVP 2 | Pendiente |
 
 ---
 
-## Backend Laravel API
+## MVP2-03 — Crear migración y modelo Category
 
-Ruta del backend:
+Objetivo:
 
-```bash
-backend/service-desk-api
+> Crear la entidad `Category` como catálogo dependiente de `Area`, para que cada área pueda tener sus propias categorías de atención.
+
+Ejemplo inicial para el área de Tecnologías de la Información:
+
+```txt
+Programas / Software
+Equipo de cómputo
+Internet
+Intranet / Plataformas de la empresa
 ```
 
-Comandos principales:
+Modelo esperado:
+
+```txt
+app/Models/Category.php
+```
+
+Migración esperada:
+
+```txt
+database/migrations/xxxx_xx_xx_xxxxxx_create_categories_table.php
+```
+
+Tabla esperada:
+
+```txt
+categories
+```
+
+Campos sugeridos:
+
+```txt
+id
+area_id
+name
+slug
+description
+is_active
+created_at
+updated_at
+```
+
+Relación esperada:
+
+```txt
+Area hasMany Category
+Category belongsTo Area
+```
+
+Validaciones esperadas:
 
 ```bash
-cd backend/service-desk-api
-composer install
-php artisan --version
-php artisan route:list
+php artisan make:model Category -m
+php artisan migrate
 php artisan test
-php artisan serve
-```
-
-URL local esperada:
-
-```txt
-http://127.0.0.1:8000
 ```
 
 ---
 
-## Frontend React
-
-Ruta del frontend:
-
-```bash
-frontend/service-desk-web
-```
-
-Comandos principales:
-
-```bash
-cd frontend/service-desk-web
-npm install
-npm run dev
-```
-
-URL local esperada:
-
-```txt
-http://localhost:5173
-```
-
----
-
-## Endpoint de salud
-
-Endpoint creado:
-
-```txt
-GET /api/health
-```
-
-URL local:
-
-```txt
-http://127.0.0.1:8000/api/health
-```
-
-Respuesta esperada:
-
-```json
-{
-  "status": "ok",
-  "message": "Service Desk API is running",
-  "service": "service-desk-ldr",
-  "version": "1.0.0"
-}
-```
-
-Prueba TDD relacionada:
-
-```bash
-php artisan test --filter=HealthEndpointTest
-```
-
----
-
-## Variables de entorno
-
-### Backend Laravel
-
-Archivo real local:
-
-```txt
-backend/service-desk-api/.env
-```
-
-Archivo plantilla:
-
-```txt
-backend/service-desk-api/.env.example
-```
-
-Variables principales:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=service_desk_ldr_dev
-DB_USERNAME=root
-DB_PASSWORD=
-FRONTEND_URL=http://localhost:5173
-```
-
-### Frontend React
-
-Archivo real local:
-
-```txt
-frontend/service-desk-web/.env
-```
-
-Archivo plantilla:
-
-```txt
-frontend/service-desk-web/.env.example
-```
-
-Variable principal:
-
-```env
-VITE_API_URL=http://127.0.0.1:8000/api
-```
-
----
-
-## Cliente Axios
-
-Ruta sugerida:
-
-```txt
-frontend/service-desk-web/src/services/api.js
-```
-
-Contenido base:
-
-```js
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  },
-});
-
-export default api;
-```
-
----
-
-## Primera conexión React + Laravel
-
-El frontend React consume el endpoint:
-
-```txt
-GET /api/health
-```
-
-Archivo de prueba funcional sugerido:
-
-```txt
-frontend/service-desk-web/src/pages/HealthCheck.jsx
-```
-
-Resultado esperado en pantalla:
-
-```txt
-Status: ok
-Message: Service Desk API is running
-Service: service-desk-ldr
-Version: 1.0.0
-```
-
----
-
-## Regla de trabajo con TDD
+## Regla de trabajo con TDD / validación funcional
 
 El proyecto debe mantenerse bajo una filosofía de TDD o validación funcional clara.
 
@@ -331,69 +246,52 @@ Commit en GitHub
 Done
 ```
 
-Una tarea crítica no debe pasar a **Done** sin:
-
-- Código implementado.
-- Prueba automatizada o validación funcional clara.
-- Sin errores visibles.
-- Commit subido a GitHub.
-- Documentación actualizada si aplica.
-
 ---
 
-## Criterios para cerrar MVP1-12
+## Criterios para cerrar MVP2-03
 
-Puedes mover el issue **MVP1-12 - Crear README inicial del proyecto** a **Done** cuando tengas validado:
+Puedes mover el issue **MVP2-03 - Crear migración y modelo Category** a **Done** cuando tengas validado:
 
 ```txt
-✅ README global creado en la raíz del proyecto
-✅ README frontend creado en frontend/service-desk-web
-✅ README backend creado en backend/service-desk-api
-✅ README global explica objetivo, stack, estructura y MVP actual
-✅ README backend explica comandos Laravel, endpoint /api/health y pruebas
-✅ README frontend explica comandos React, Axios y conexión con API
-✅ Se documenta el uso de variables .env y .env.example
-✅ Se documenta la regla TDD / validación funcional
+✅ Se creó el modelo app/Models/Category.php
+✅ Se creó la migración create_categories_table
+✅ La tabla categories incluye id
+✅ La tabla categories incluye area_id
+✅ area_id está definido como foreign key hacia areas
+✅ La tabla categories incluye name
+✅ La tabla categories incluye slug
+✅ La tabla categories incluye description nullable
+✅ La tabla categories incluye is_active con valor default true
+✅ La tabla categories incluye timestamps
+✅ El modelo Category tiene fillable configurado
+✅ El modelo Category tiene relación area()
+✅ El modelo Area tiene relación categories()
+✅ php artisan migrate se ejecuta correctamente
+✅ php artisan test sigue pasando sin errores críticos
+✅ README global actualizado
 ✅ Cambios subidos a GitHub
 ```
 
 ---
 
-## Tablero SCRUM
+## Comandos Git básicos
 
-Columnas:
+Desde la raíz del proyecto:
 
-```txt
-Product Backlog
-Sprint Backlog
-To Do
-In Progress
-Code Review
-Testing / QA
-Blocked
-Done
+```bash
+git status
+git add .
+git commit -m "feat: create category model and migration"
+git push origin main
 ```
 
-Campos:
+---
 
-```txt
-Priority
-Module
-Sprint
-Story Points
-Type
-MVP Phase
-```
+## Próximo paso
 
-Story Points:
+Después de cerrar MVP2-03, continuar con:
 
-```txt
-1 = Muy fácil
-2 = Fácil
-3 = Medio
-5 = Complejo
-8 = Muy complejo
-```
+**MVP2-04 — Crear migración y modelo Subcategory**
 
 ---
 
