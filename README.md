@@ -1,10 +1,12 @@
-# Service Desk LDR — README Global MVP2-04
+# Service Desk LDR — README Global MVP2-05
 
 Sistema interno tipo **Service Desk / Helpdesk** para la gestión de incidentes, requerimientos y solicitudes de soporte tecnológico dentro de LDR Solutions.
 
+---
+
 ## Arquitectura oficial
 
-Arquitectura **monorepo full stack**:
+El proyecto trabaja con arquitectura **monorepo full stack**:
 
 ```txt
 service-desk-ldr/
@@ -89,8 +91,8 @@ MVP 3 — Operación TI
 | MVP2-01 | Definir alcance técnico del MVP 2 | Finalizado / validar cierre |
 | MVP2-02 | Crear migración y modelo Area | Finalizado / validar cierre |
 | MVP2-03 | Crear migración y modelo Category | Finalizado / validar cierre |
-| MVP2-04 | Crear migración y modelo Subcategory | Issue actual |
-| MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Pendiente |
+| MVP2-04 | Crear migración y modelo Subcategory | Finalizado / validar cierre |
+| MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Issue actual |
 | MVP2-06 | Crear migración y modelo Ticket | Pendiente |
 | MVP2-07 | Crear prueba TDD para creación de ticket | Pendiente |
 | MVP2-08 | Crear endpoint para registrar ticket | Pendiente |
@@ -111,17 +113,39 @@ MVP 3 — Operación TI
 
 ---
 
-## MVP2-04 — Crear migración y modelo Subcategory
+## MVP2-05 — Crear seeders de áreas, categorías y subcategorías
 
 Objetivo:
 
-> Crear la entidad `Subcategory` como catálogo dependiente de `Category`, para que cada categoría tenga sus propias subcategorías específicas de atención.
+> Cargar el catálogo base de áreas, categorías y subcategorías en MySQL para que el usuario pueda clasificar correctamente su ticket desde React.
 
-Ejemplos iniciales para TI:
+---
+
+## Catálogo base
+
+### Áreas iniciales
+
+```txt
+Tecnologías de la Información
+Servicios Generales
+Recursos Humanos
+Jurídico
+```
+
+### Categorías TI
+
+```txt
+Programas / Software
+Equipo de cómputo
+Internet
+Intranet / Plataformas de la empresa
+```
+
+### Subcategorías TI
 
 ```txt
 Programas / Software:
-- Office 365
+- Office 365 (Word, Excel, PowerPoint)
 - Correo
 - Instalación de programas
 - Soporte de aplicaciones
@@ -131,14 +155,14 @@ Equipo de cómputo:
 - PC de escritorio
 - Impresora
 - Celular
-- Periféricos
+- Periféricos (otros dispositivos)
 
 Internet:
 - Red WiFi
 - Desbloqueo de sitio web
 - Red cableada
 
-Intranet:
+Intranet / Plataformas de la empresa:
 - Comunicados institucionales
 - Demos
 - Flotilla
@@ -149,93 +173,43 @@ Intranet:
 - Viáticos
 ```
 
-Modelo esperado:
+---
+
+## Archivos esperados
 
 ```txt
-app/Models/Subcategory.php
+database/seeders/ServiceDeskCatalogSeeder.php
+database/seeders/DatabaseSeeder.php
+tests/Feature/ServiceDeskCatalogSeederTest.php
 ```
 
-Migración esperada:
+---
 
-```txt
-database/migrations/xxxx_xx_xx_xxxxxx_create_subcategories_table.php
-```
-
-Tabla esperada:
-
-```txt
-subcategories
-```
-
-Campos sugeridos:
-
-```txt
-id
-category_id
-name
-slug
-description
-is_active
-created_at
-updated_at
-```
-
-Relaciones esperadas:
-
-```txt
-Category hasMany Subcategory
-Subcategory belongsTo Category
-```
-
-Validaciones esperadas:
+## Validaciones esperadas
 
 ```bash
-php artisan make:model Subcategory -m
-php artisan migrate
+php artisan db:seed --class=ServiceDeskCatalogSeeder
+php artisan test --filter=ServiceDeskCatalogSeederTest
 php artisan test
 ```
 
 ---
 
-## Regla de trabajo con TDD / validación funcional
+## Criterios para cerrar MVP2-05
+
+Puedes mover el issue **MVP2-05 - Crear seeders de áreas, categorías y subcategorías** a **Done** cuando tengas validado:
 
 ```txt
-Criterio de aceptación o prueba
-↓
-Implementación mínima
-↓
-Validación
-↓
-Refactorización
-↓
-Documentación
-↓
-Commit en GitHub
-↓
-Done
-```
-
----
-
-## Criterios para cerrar MVP2-04
-
-Puedes mover el issue **MVP2-04 - Crear migración y modelo Subcategory** a **Done** cuando tengas validado:
-
-```txt
-✅ Se creó el modelo app/Models/Subcategory.php
-✅ Se creó la migración create_subcategories_table
-✅ La tabla subcategories incluye id
-✅ La tabla subcategories incluye category_id
-✅ category_id está definido como foreign key hacia categories
-✅ La tabla subcategories incluye name
-✅ La tabla subcategories incluye slug
-✅ La tabla subcategories incluye description nullable
-✅ La tabla subcategories incluye is_active con valor default true
-✅ La tabla subcategories incluye timestamps
-✅ El modelo Subcategory tiene fillable configurado
-✅ El modelo Subcategory tiene relación category()
-✅ El modelo Category tiene relación subcategories()
-✅ php artisan migrate se ejecuta correctamente
+✅ Se creó ServiceDeskCatalogSeeder
+✅ Se registraron las áreas base
+✅ Se registraron las categorías TI
+✅ Se registraron las subcategorías TI
+✅ El seeder usa firstOrCreate o updateOrCreate para evitar duplicados
+✅ El seeder puede ejecutarse más de una vez sin duplicar registros
+✅ DatabaseSeeder llama a ServiceDeskCatalogSeeder
+✅ Se creó prueba para validar el catálogo base
+✅ php artisan db:seed --class=ServiceDeskCatalogSeeder se ejecuta correctamente
+✅ php artisan test --filter=ServiceDeskCatalogSeederTest pasa correctamente
 ✅ php artisan test sigue pasando sin errores críticos
 ✅ README global actualizado
 ✅ Cambios subidos a GitHub
@@ -248,7 +222,7 @@ Puedes mover el issue **MVP2-04 - Crear migración y modelo Subcategory** a **Do
 ```bash
 git status
 git add .
-git commit -m "feat: create subcategory model and migration"
+git commit -m "feat: seed service desk base catalogs"
 git push origin main
 ```
 
@@ -256,7 +230,7 @@ git push origin main
 
 ## Próximo paso
 
-**MVP2-05 — Crear seeders de áreas, categorías y subcategorías**
+**MVP2-06 — Crear migración y modelo Ticket**
 
 ---
 
