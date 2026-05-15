@@ -1,4 +1,4 @@
-# Service Desk LDR — README Global MVP2-06
+# Service Desk LDR — README Global MVP2-07
 
 Sistema interno tipo **Service Desk / Helpdesk** para la gestión de incidentes, requerimientos y solicitudes de soporte tecnológico dentro de LDR Solutions.
 
@@ -51,8 +51,8 @@ Objetivo:
 | MVP2-03 | Crear migración y modelo Category | Finalizado / validar cierre |
 | MVP2-04 | Crear migración y modelo Subcategory | Finalizado / validar cierre |
 | MVP2-05 | Crear seeders de áreas, categorías y subcategorías | Finalizado / validar cierre |
-| MVP2-06 | Crear migración y modelo Ticket | Issue actual |
-| MVP2-07 | Crear prueba TDD para creación de ticket | Pendiente |
+| MVP2-06 | Crear migración y modelo Ticket | Finalizado / validar cierre |
+| MVP2-07 | Crear prueba TDD para creación de ticket | Issue actual |
 | MVP2-08 | Crear endpoint para registrar ticket | Pendiente |
 | MVP2-09 | Crear validaciones backend para ticket | Pendiente |
 | MVP2-10 | Implementar generación automática de folio | Pendiente |
@@ -69,96 +69,64 @@ Objetivo:
 | MVP2-21 | Actualizar README global, backend y frontend | Pendiente |
 | MVP2-22 | Validar criterios de cierre del MVP 2 | Pendiente |
 
-## MVP2-06 — Crear migración y modelo Ticket
+## MVP2-07 — Crear prueba TDD para creación de ticket
 
 Objetivo:
 
-> Crear la entidad principal `Ticket`, que será el núcleo del Service Desk y permitirá guardar las solicitudes creadas por los usuarios.
+> Crear la primera prueba TDD que defina el comportamiento esperado para registrar un ticket desde la API.
 
-## Modelo esperado
+Esta prueba representa la fase **RED** de TDD: al inicio puede fallar porque el endpoint `POST /api/tickets` todavía no existe. El objetivo es dejar definido qué debe cumplir la implementación de los próximos issues.
+
+## Archivo esperado
 
 ```txt
-app/Models/Ticket.php
+tests/Feature/TicketCreationTest.php
 ```
 
-## Migración esperada
+## Comportamiento esperado por la prueba
 
 ```txt
-database/migrations/xxxx_xx_xx_xxxxxx_create_tickets_table.php
+POST /api/tickets
 ```
 
-## Tabla esperada
+Debe permitir crear un ticket con:
 
 ```txt
-tickets
-```
-
-## Campos sugeridos
-
-```txt
-id
-folio
-requester_id
-assigned_to_id
 area_id
 category_id
 subcategory_id
 title
 description
-priority
-status
-created_at
-updated_at
-deleted_at
 ```
 
-## Relaciones esperadas
+Y debe responder con:
 
 ```txt
-Ticket belongsTo Area
-Ticket belongsTo Category
-Ticket belongsTo Subcategory
-Ticket belongsTo User como requester
-Ticket belongsTo User como assignedTo
+HTTP 201
+data.title
+data.status = new
+data.priority = medium
 ```
 
-## Estados base iniciales
+También debe validar que el registro exista en la tabla:
 
 ```txt
-new
-assigned
-in_progress
-resolved
-closed
-cancelled
-reprocess
-```
-
-## Prioridades base iniciales
-
-```txt
-urgent
-high
-medium
-low
-```
-
-## Requerimiento futuro agregado
-
-Se mantiene como requerimiento futuro una **Base de conocimiento / BD de aprendizaje** para registrar soluciones técnicas aplicadas por técnicos al resolver tickets.
-
-Ubicación principal:
-
-```txt
-MVP 3 — Operación TI
+tickets
 ```
 
 ## Validaciones esperadas
 
 ```bash
-php artisan make:model Ticket -m
-php artisan migrate
-php artisan test
+php artisan make:test TicketCreationTest
+php artisan test tests/Feature/TicketCreationTest.php
+php artisan test 
+```
+
+Resultado esperado en esta fase:
+
+```txt
+La prueba TicketCreationTest puede quedar en RED porque el endpoint POST /api/tickets todavía no está implementado.
+Las pruebas anteriores deben seguir pasando al excluir el grupo ticket-creation.
 ```
 
 ## Regla de trabajo con TDD / validación funcional
@@ -179,42 +147,31 @@ Subir cambios a GitHub
 Done
 ```
 
-## Criterios para cerrar MVP2-06
+## Criterios para cerrar MVP2-07
 
-Crear migración y modelo Ticket:
+Crear prueba TDD para creación de ticket:
 
 ```txt
-✅ Se creó el modelo app/Models/Ticket.php
-✅ Se creó la migración create_tickets_table
-✅ La tabla tickets incluye id
-✅ La tabla tickets incluye folio único
-✅ La tabla tickets incluye requester_id nullable
-✅ La tabla tickets incluye assigned_to_id nullable
-✅ La tabla tickets incluye area_id
-✅ La tabla tickets incluye category_id
-✅ La tabla tickets incluye subcategory_id
-✅ La tabla tickets incluye title
-✅ La tabla tickets incluye description
-✅ La tabla tickets incluye priority con valor default medium
-✅ La tabla tickets incluye status con valor default new
-✅ La tabla tickets incluye timestamps
-✅ La tabla tickets incluye softDeletes
-✅ Se agregaron índices útiles para consultas
-✅ El modelo Ticket tiene fillable configurado
-✅ El modelo Ticket tiene relación area()
-✅ El modelo Ticket tiene relación category()
-✅ El modelo Ticket tiene relación subcategory()
-✅ El modelo Ticket tiene relación requester()
-✅ El modelo Ticket tiene relación assignedTo()
-✅ php artisan migrate se ejecuta correctamente
-✅ php artisan test sigue pasando sin errores críticos
+✅ Se creó tests/Feature/TicketCreationTest.php
+✅ La prueba usa RefreshDatabase
+✅ La prueba ejecuta ServiceDeskCatalogSeeder
+✅ La prueba obtiene Area, Category y Subcategory existentes
+✅ La prueba define payload válido para crear ticket
+✅ La prueba consume POST /api/tickets
+✅ La prueba espera HTTP 201
+✅ La prueba valida respuesta JSON esperada
+✅ La prueba valida status inicial new
+✅ La prueba valida priority inicial medium
+✅ La prueba valida registro en tabla tickets
+✅ Se documentó que esta prueba puede iniciar en RED hasta implementar MVP2-08
+✅ Las pruebas anteriores siguen pasando 
 ✅ README global actualizado
 ✅ Cambios subidos a GitHub
 ```
 
 ## Próximo paso
 
-**MVP2-07 — Crear prueba TDD para creación de ticket**
+**MVP2-08 — Crear endpoint para registrar ticket**
 
 ## Responsable
 
